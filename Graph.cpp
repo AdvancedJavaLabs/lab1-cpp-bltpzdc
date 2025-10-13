@@ -15,7 +15,11 @@ void Graph::parallelBFS(int startVertex) {
 
     if (startVertex < 0 or startVertex >= V) return;
 
+#ifdef __unsafe
+    std::vector<int> levels(V);
+#else
     std::vector<std::atomic<int>> levels(V);
+#endif
     for ( auto& lvl : levels ) { lvl = -1; }
     levels[startVertex] = 0;
 
@@ -47,8 +51,18 @@ void Graph::parallelBFS(int startVertex) {
         auto cur_batch = &processed.emplace_back();
 
         for ( const auto elt : b ) {
+#ifdef __unsafe
+            auto cur_level = levels[elt] + 1;
+#else
             auto cur_level = levels[elt].load() + 1;
+#endif
             for ( const auto neigh : adjList[elt] ) {
+#ifdef __unsafe
+                if ( auto& level = levels[neigh]; level == -1 or level > cur_level ) {
+                    level = cur_level;
+                    cur_batch->emplace_back(neigh);
+                }
+#else
                 int expected = -1;
                 if ( levels[neigh].compare_exchange_weak(expected, cur_level) ) {
                     cur_batch->emplace_back(neigh);
@@ -62,6 +76,7 @@ void Graph::parallelBFS(int startVertex) {
                         expected = levels[neigh].load();
                     }
                 }
+#endif
 
                 if ( cur_batch->size() >= 256 ) {
                     cur_batch = &processed.emplace_back();
