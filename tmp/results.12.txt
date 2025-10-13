@@ -16,25 +16,25 @@ Parallel: 1
 --------
 Times for 10000 vertices and 100000 connections: 
 Serial: 0
-Parallel: 1
+Parallel: 0
 --------
 Times for 50000 vertices and 1000000 connections: 
-Serial: 7
+Serial: 6
 Parallel: 4
 --------
 Times for 100000 vertices and 1000000 connections: 
-Serial: 10
-Parallel: 5
+Serial: 11
+Parallel: 6
 --------
 Times for 1000000 vertices and 10000000 connections: 
-Serial: 165
-Parallel: 63
+Serial: 144
+Parallel: 60
 --------
 Times for 2000000 vertices and 10000000 connections: 
-Serial: 243
-Parallel: 116
+Serial: 220
+Parallel: 123
 --------
 Times for 20000000 vertices and 50000000 connections: 
-Serial: 2545
-Parallel: 1602
+Serial: 2761
+Parallel: 1599
 --------

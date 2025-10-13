@@ -26,8 +26,12 @@ void Graph::parallelBFS(int startVertex) {
     SynchronizedQueue q;
     q.queue.push(batch {startVertex});
 
+#ifdef __num_threads
+    auto workers_count = __num_threads;
+#else
     auto workers_count = std::thread::hardware_concurrency();
     if ( not workers_count ) { workers_count = 4; }
+#endif
     std::vector<std::thread> workers;
 
     auto pop_batch = [&]() -> batch {
