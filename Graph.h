@@ -1,5 +1,17 @@
 #pragma once
-#include <vector>
+
+#include <condition_variable>
+#include <queue>
+
+using batch = std::vector<int>;
+struct SynchronizedQueue {
+    std::mutex mutex;
+    std::condition_variable cv;
+    std::queue<batch> queue;
+
+    size_t idle {};
+    bool done {};
+};
 
 class Graph {
 public:
